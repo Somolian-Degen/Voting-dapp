@@ -6,9 +6,6 @@
 // check voters are authentcated to vote. this can be a governance token  so only people whom hold said tokesn have governance power in the dapp(for local governemnt dapp use proprety number that i was told to use)
 //3) chair person ( wallet that deploys the contract 
 // authenticate and deploy contract
-
-
-
 pragma solidity ^0.8.4;
 
 contract Ballot {
@@ -50,5 +47,49 @@ contract Ballot {
             }));
         }
     }
+
+// need function for authenticating voter
+
+    function giveRightToVote(address voter) public {
+        require(msg.sender == chairperson,
+                'Only the chairperson cah give accsess to vote');
+                //require voter has not voted yer
+                //adding '!' makes statemenmt false
+        require(!voters[voter].voted,
+                'The voter has already voted');
+        require(voters[voter].weight == 0);
+
+        voters[voter].weight == 1;
+    }
+// need function for voting
+
+    function vote(uint proposal) public {
+        Voter storage sender = voters [msg.sender];
+        require(sender.weight != 0, 'Has no right to vote');
+        require(!sender.voted, 'Already voted');
+        sender.voted = true;
+        sender.vote = proposal;
+
+        proposals[proposal].voteCount = proposals[proposal].voteCount + sender.weight;
+
+    }
+    // need function for showing results
+
+    //function that shows winning proposal by integer
+
+        function winningProposal() public view returns (uint winningProposal_) {
+            uint winningVoteCount = 0;
+            for( uint i=0; i < proposals.length; i++) {
+                if(proposals[i].voteCount > winningVoteCount) {
+                    winningVoteCount = proposals[i].voteCount;
+                    winningProposal_ = i;
+                }
+            }
+        }
+    //function that shows winner by name 
+
+        function winningName() public view returns (bytes32 winningName_) {
+            winningName_ = proposals[winningProposal()].name;
+        }
 
 }
