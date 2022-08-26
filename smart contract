@@ -1,21 +1,29 @@
 // SPDX-License-identifier: Unlicense
+
+// 1) need ability to accept proposals and sotre them.   proposal = name and number
+//2) need voters &votig ability
+// -----keep track of voting
+// check voters are authentcated to vote. this can be a governance token  so only people whom hold said tokesn have governance power in the dapp(for local governemnt dapp use proprety number that i was told to use)
+//3) chair person ( wallet that deploys the contract 
+// authenticate and deploy contract
+
+
+
 pragma solidity ^0.8.4;
 
 contract Ballot {
 
-
-
     // struct is a method to create your own data type
     
-    //voters: voted=bool (bool or boolean is a true or falce statement variable) , access to vote = unit (unit is declaring osmething in solidity as an integer), vote index
+    //voters: voted=bool (bool or boolean is a true or falce statement variable) , access to vote = uint (uint is declaring osmething in solidity as an integer), vote index
     struct Voter {
-        unit vote;
+        uint vote;
         bool voted;
-        unit weight;
+        uint weight;
     }
     struct Proposal {
     bytes32  name; // name of each proposal
-    unit voteCount; // number of acumulated votes
+    uint voteCount; // number of acumulated votes
     }
 
     //arrays
@@ -24,8 +32,23 @@ contract Ballot {
 
     //mapping allows for us to create a store value with keys and indexes
 
-    mapping(address => Voter) voters;
+    mapping(address => Voter) public voters; // voters get address as key and voter for value
 
-
+    address public chairperson;
+    // constructor function is ran imedietly when the contract is deployed.  
+    // memory allows proposalNames to be temporaly stored.  Memory defines a temporary data location in Solidity durring runtime only of methods
+    // msg.sender = global variable that states the person who is currently connecting to contract
+    constructor(bytes32[] memory proposalNames) {
+        chairperson = msg.sender;
+        // add 1 to chairperosn weight
+        voters[chairperson].weight = 1;
+        // will add proposal names to Smartcontract upon deployment 
+        for(uint i=0; i <proposalNames.length; i++ ) {
+            proposals.push(Proposal({
+                name: proposalNames[i],
+                voteCount: 0
+            }));
+        }
+    }
 
 }
