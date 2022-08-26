@@ -1,0 +1,31 @@
+// SPDX-License-identifier: Unlicense
+pragma solidity ^0.8.4;
+
+contract Ballot {
+
+
+
+    // struct is a method to create your own data type
+    
+    //voters: voted=bool (bool or boolean is a true or falce statement variable) , access to vote = unit (unit is declaring osmething in solidity as an integer), vote index
+    struct Voter {
+        unit vote;
+        bool voted;
+        unit weight;
+    }
+    struct Proposal {
+    bytes32  name; // name of each proposal
+    unit voteCount; // number of acumulated votes
+    }
+
+    //arrays
+
+    Proposal[] public proposals;
+
+    //mapping allows for us to create a store value with keys and indexes
+
+    mapping(address => Voter) voters;
+
+
+
+}
